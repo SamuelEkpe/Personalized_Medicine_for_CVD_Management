@@ -73,7 +73,7 @@ The CDSS is deployed as a Streamlit web application, making it accessible remote
 
 * Hosting: Streamlit Community Cloud
 
-* Public URL: (insert your deployed app link here)
+* Public URL: (pmmbamlcadsamuelcyril.streamlit.app)
 
 ### Project Structure
 cad-cdss/

@@ -7,7 +7,7 @@ import os
 
 sys.path.append(".")
 
-from cdss import cdss_decision
+from cdss import cdss_decision, cdss_batch_prediction
 
 # -----------------------
 # Load model & metadata

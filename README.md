@@ -15,10 +15,13 @@ The CDSS was developed as part of an MSc project on Personalized Medicine (PM) f
 
 ### Project Objectives
 The key objectives of the project are:
-1. Predict individual CAD risk probability.
-2. Classify patients into clinically meaningful CAD phenotypes.
-3. Provide transparent explanations for model predictions.
-4. Deliver a user-friendly web interface for non-technical users.
+1. Identifying significant associations among CAD risk factors in African populations  using MBA.
+2. Enhance CAD risk prediction by integrating MBA-derived features into supervised machine learning models to improve model interpretability.
+3. Predict individual CAD risk probability.
+4.  Classify patients into clinically meaningful CAD phenotypes.
+5.   rovide transparent explanations for model predictions.
+6.   Design a prototype clinical decision support system (CDSS) to aid clinicians in delivering personalized treatment recommendations for CAD patients.
+
 
 
 ## Summary of Methodology

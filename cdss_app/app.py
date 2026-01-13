@@ -3,6 +3,7 @@ import streamlit as st
 import joblib as jb
 import pandas as pd
 import sys
+import os
 
 sys.path.append(".")
 
@@ -11,7 +12,14 @@ from cdss import cdss_decision
 # -----------------------
 # Load model & metadata
 # -----------------------
-model = jb.load("model/cdss_model.pkl")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(BASE_DIR, "model", "cdss_model.pkl")
+
+model = jb.load(MODEL_PATH)
+
+#model = jb.load("model/cdss_model.pkl")
 feature_origin_map = jb.load("model/feature_origin_map.pkl")
 
 # -----------------------

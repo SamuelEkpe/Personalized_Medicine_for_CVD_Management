@@ -113,11 +113,11 @@ The system emphasizes:
 * Practical deployability in real-world healthcare settings
 
 ### Author
-Ekpe, Samuel Cyril
-MSC Candidate 
-Department of Computer Science
-University of Nigeria Nsukka
-Supervisior: Professor Colins Udeanor
+### Ekpe, Samuel Cyril
+### M.Sc Candidate 
+### Department of Computer Science
+### University of Nigeria Nsukka
+### Supervisior: Professor Colins Udeanor
 
 
 

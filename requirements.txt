@@ -1,0 +1,5 @@
+ Streamlit
+Pandas
+Numpy
+scikit-learn == 1.6.1
+joblib

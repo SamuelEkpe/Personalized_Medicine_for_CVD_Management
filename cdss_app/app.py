@@ -98,7 +98,7 @@ if submitted:
     st.subheader("Key Contributing Factors")
     
     for feat, contrib in result["Top_Contributing_Features"]:
-        st.write(f"- **{clean_feature_name(feat)}** → {contrib:+.3f}")
+        st.write(f"- **{clean_feature_name(feat)}** => {contrib:+.3f}")
 
 
     #for feat, contrib in result["Top_Contributing_Features"]:

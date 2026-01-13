@@ -20,7 +20,8 @@ MODEL_PATH = os.path.join(BASE_DIR, "model", "cdss_model.pkl")
 model = jb.load(MODEL_PATH)
 
 #model = jb.load("model/cdss_model.pkl")
-feature_origin_map = jb.load("model/feature_origin_map.pkl")
+feature_path = os.path.join(BASE_DIR, "model","feature_origin_map.pkl")
+feature_origin_map = jb.load(feature_path)
 
 # -----------------------
 # UI

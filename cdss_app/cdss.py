@@ -114,6 +114,8 @@ def cdss_decision(patient_df, model, feature_origin_map,threshold=0.5):
         "Top_Contributing_Features": explanation
     }
 
+# handling batch prediction
+
 def cdss_batch_prediction(
     patients_df,
     model,

@@ -113,4 +113,35 @@ def cdss_decision(patient_df, model, feature_origin_map,threshold=0.5):
         "CAD_Phenotype": phenotype,
         "Top_Contributing_Features": explanation
     }
-    
+
+def cdss_batch_prediction(
+    patients_df,
+    model,
+    threshold=0.5
+):
+    """
+    Perform batch CAD risk prediction for multiple patients.
+    Returns a DataFrame with risk probabilities and phenotypes.
+    """
+
+    results = []
+
+    for idx in range(len(patients_df)):
+        patient = patients_df.iloc[[idx]]  # keep as DataFrame
+
+        output = cdss_decision(
+            patient_df=patient,
+            model=model,
+            threshold=threshold
+        )
+
+        results.append({
+            "Patient_ID": idx + 1,
+            "CAD_Risk_Probability": output["CAD_Risk_Probability"],
+            "Predicted_CAD_Status": output["Predicted_CAD_Status"],
+            "Risk_Category": output["Risk_Category"],
+            "CAD_Phenotype": output["CAD_Phenotype"]
+        })
+
+    return pd.DataFrame(results)
+

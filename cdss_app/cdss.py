@@ -113,37 +113,42 @@ def cdss_decision(patient_df, model, feature_origin_map,threshold=0.5):
         "CAD_Phenotype": phenotype,
         "Top_Contributing_Features": explanation
     }
-
+    
 # handling batch prediction
-
-def cdss_batch_prediction(
-    patients_df,
-    model,
-    threshold=0.5
-):
+def cdss_batch_prediction(batch_df, model, feature_origin_map, threshold=0.5, top_k=5):
     """
-    Perform batch CAD risk prediction for multiple patients.
-    Returns a DataFrame with risk probabilities and phenotypes.
+    Run CDSS prediction for multiple patients (row-wise)
     """
 
     results = []
 
-    for idx in range(len(patients_df)):
-        patient = patients_df.iloc[[idx]]  # keep as DataFrame
+    for idx, row in batch_df.iterrows():
+
+        patient_df = pd.DataFrame([row])  # VERY IMPORTANT (single-row DF)
 
         output = cdss_decision(
-            patient_df=patient,
+            patient_df=patient_df,
             model=model,
+            feature_origin_map=feature_origin_map,
             threshold=threshold
         )
+        
+        # handling patient risk explanations
+        # Format contributing factors
+        explanations = output["Top_Contributing_Features"][:top_k]
+
+        explanation_text = ", ".join([
+            f"{feat.replace('numeric__','').replace('nominal__','').replace('_',' ')}"
+            f"({contrib:+.2f})"
+            for feat, contrib in explanations
+        ])
 
         results.append({
-            "Patient_ID": idx + 1,
+            "Patient_Index": idx,
             "CAD_Risk_Probability": output["CAD_Risk_Probability"],
-            "Predicted_CAD_Status": output["Predicted_CAD_Status"],
             "Risk_Category": output["Risk_Category"],
-            "CAD_Phenotype": output["CAD_Phenotype"]
+            "CAD_Phenotype": output["CAD_Phenotype"],
+            "Top_Contributing_Features": explanation_text
         })
 
     return pd.DataFrame(results)
-

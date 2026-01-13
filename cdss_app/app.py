@@ -31,80 +31,125 @@ st.set_page_config(page_title="CDSS for CAD", layout="centered")
 st.title("Coronary Artery Disease CDSS")
 st.markdown("Clinical Decision Support System for CAD Risk Assessment")
 
-st.subheader("Patient Information")
 
-with st.form("patient_form"):
+# seting prediction modes
+mode = st.radio(
+    "Select Prediction Mode",
+    ["Single Patient", "Batch Prediction"]
+)
 
-    col1, col2 = st.columns(2)
+# UI by prediction mode choice
 
-    with col1:
-        age = st.number_input("Age", 18, 100, 50)
-        sex = st.selectbox("Sex", ["Male", "Female"])
-        bmi = st.number_input("BMI", 10.0, 50.0, 25.0)
-        systolic = st.number_input("Systolic BP", 80, 220, 120)
-        cholesterol = st.number_input("Total Cholesterol", 100.0, 400.0, 200.0)
+if mode == "Single Patient":
+    st.subheader("Patient Information")
 
-    with col2:
-        smoking = st.selectbox("Smoking Status", ["Never", "Former", "Current"])
-        diabetes = st.selectbox("Diabetes", ["Yes", "No"])
-        hypertension = st.selectbox("Hypertension", ["Yes", "No"])
-        chest_pain = st.selectbox("Chest Pain Type", ["Typical", "Atypical"])
-        family_history = st.selectbox("Family History of CAD", ["Yes", "No"])
+    with st.form("patient_form"):
 
-    submitted = st.form_submit_button("Assess CAD Risk")
+        col1, col2 = st.columns(2)
 
-# -----------------------
-# Prediction
-# -----------------------
-if submitted:
+        with col1:
+            age = st.number_input("Age", 18, 100, 50)
+            sex = st.selectbox("Sex", ["Male", "Female"])
+            bmi = st.number_input("BMI", 10.0, 50.0, 25.0)
+            systolic = st.number_input("Systolic BP", 80, 220, 120)
+            cholesterol = st.number_input("Total Cholesterol", 100.0, 400.0, 200.0)
 
-    patient = pd.DataFrame([{
-        "Age": age,
-        "Sex": sex,
-        "BMI": bmi,
-        "Systolic_BP": systolic,
-        "Total_Cholesterol": cholesterol,
-        "Smoking_Status": smoking,
-        "Diabetes": diabetes,
-        "Hypertension": hypertension,
-        "Chest_Pain_Type": chest_pain,
-        "Family_History_CAD": family_history
-    }])
-    
-    def clean_feature_name(name):
-        return (
-        name.replace("numeric__", "")
-            .replace("nominal__", "")
-            .replace("_", " ")
+        with col2:
+            smoking = st.selectbox("Smoking Status", ["Never", "Former", "Current"])
+            diabetes = st.selectbox("Diabetes", ["Yes", "No"])
+            hypertension = st.selectbox("Hypertension", ["Yes", "No"])
+            chest_pain = st.selectbox("Chest Pain Type", ["Typical", "Atypical"])
+            family_history = st.selectbox("Family History of CAD", ["Yes", "No"])
+
+        submitted = st.form_submit_button("Assess CAD Risk")
+
+    # -----------------------
+    # Prediction
+    # -----------------------
+    if submitted:
+
+        patient = pd.DataFrame([{
+            "Age": age,
+            "Sex": sex,
+            "BMI": bmi,
+            "Systolic_BP": systolic,
+            "Total_Cholesterol": cholesterol,
+            "Smoking_Status": smoking,
+            "Diabetes": diabetes,
+            "Hypertension": hypertension,
+            "Chest_Pain_Type": chest_pain,
+            "Family_History_CAD": family_history
+        }])
+        
+        def clean_feature_name(name):
+            return (
+            name.replace("numeric__", "")
+                .replace("nominal__", "")
+                .replace("_", " ")
+        )
+
+
+        result = cdss_decision(
+            patient_df=patient,
+            model=model,
+            feature_origin_map=feature_origin_map
+        )
+
+        st.subheader("CDSS Result")
+
+        st.metric(
+            label="CAD Risk Probability",
+            value=result["CAD_Risk_Probability"]
+        )
+
+        st.write("**Risk Category:**", result["Risk_Category"])
+        st.write("**CAD Phenotype:**", result["CAD_Phenotype"])
+
+        st.subheader("Key Contributing Factors")
+        
+        for feat, contrib in result["Top_Contributing_Features"]:
+            st.write(f"- **{clean_feature_name(feat)}** => {contrib:+.3f}")
+
+
+  # handling batch prediction
+  
+elif mode == "Batch Prediction":
+    st.subheader("Batch CAD Risk Assessment")
+
+    uploaded_file = st.file_uploader(
+        "Upload patient data (CSV)",
+        type=["csv"]
     )
 
+    if uploaded_file:
+        batch_data = pd.read_csv(uploaded_file)
 
-    result = cdss_decision(
-        patient_df=patient,
-        model=model,
-        feature_origin_map=feature_origin_map
-    )
+        st.write("Preview of uploaded data:")
+        st.dataframe(batch_data.head())
 
-    st.subheader("CDSS Result")
+        if st.button("Run Batch Prediction"):
+            batch_results = cdss_batch_prediction(
+                batch_data,
+                model,
+                feature_origin_map
+            )
 
-    st.metric(
-        label="CAD Risk Probability",
-        value=result["CAD_Risk_Probability"]
-    )
+            st.success("Batch prediction completed")
+            st.dataframe(batch_results)
 
-    st.write("**Risk Category:**", result["Risk_Category"])
-    st.write("**CAD Phenotype:**", result["CAD_Phenotype"])
+            st.download_button(
+                label="Download Results",
+                data=batch_results.to_csv(index=False),
+                file_name="cad_batch_predictions.csv",
+                mime="text/csv"
+            )
 
-    st.subheader("Key Contributing Factors")
-    
-    for feat, contrib in result["Top_Contributing_Features"]:
-        st.write(f"- **{clean_feature_name(feat)}** => {contrib:+.3f}")
-
-
-    #for feat, contrib in result["Top_Contributing_Features"]:
-      #  st.write(f"- **{feat}** → {contrib:+.3f}")
       
 
     st.info(
         "This System is designed to assist clinicians in making decision!.\n It should not replace the clinicians"
     )
+
+
+
+

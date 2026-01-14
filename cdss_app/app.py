@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import shap
 import sys
+import os
 sys.path.append(".")
 
 from shap_utils import explain_patient_shap  # or shap.py if named that

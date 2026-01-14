@@ -14,9 +14,18 @@ from cdss import cdss_decision, cdss_batch_prediction
 # -----------------------
 # Load model & metadata
 # -----------------------
-model = jb.load("model/cdss_model.pkl")
-feature_origin_map = jb.load("model/feature_origin_map.pkl")
-X_background = jb.load("model/X_background.pkl")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(BASE_DIR, "model", "cdss_model.pkl") # to fetch the model path
+
+model = jb.load(MODEL_PATH)
+
+#model = jb.load("model/cdss_model.pkl")
+feature_path = os.path.join(BASE_DIR, "model","feature_origin_map.pkl") 
+feature_origin_map = jb.load(feature_path)
+X_background_path = os.path.join(BASE_DIR, "model","X_background.pkl")
+X_background = jb.load(X_background_path)
 
 # -----------------------
 # UI

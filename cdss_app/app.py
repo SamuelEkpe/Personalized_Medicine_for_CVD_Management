@@ -240,4 +240,4 @@ elif mode == "Batch Prediction":
             )
 
     st.info("This system is designed to assist clinicians in decision-making.\n It should not replace clinicians.")
-    st.info("Developed by Ekpe Samuel Cyril \n Submitted to Department of Computer Science \n In Partial Fulfilment of the Requirements for the Award of Masters Degree in Computer Science"
+    st.info("Developed by Ekpe Samuel Cyril \n Submitted to Department of Computer Science \n In Partial Fulfilment of the Requirements for the Award of Masters Degree in Computer Science")
